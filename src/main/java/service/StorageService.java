@@ -11,13 +11,15 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import controller.Client;
-import view.Principal;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static view.Principal.BASE_PATH;
+import static view.Principal.FILE_SEPARATOR;
 
 public class StorageService {
 
@@ -51,7 +53,7 @@ public class StorageService {
         }
         for (String key : objects) {
             if (key.contains(".zip") || key.contains(".txt"))
-                downloadToLocal(Principal.BASE_PATH + "/" + key, bucket, key);
+                downloadToLocal(BASE_PATH + FILE_SEPARATOR + key, bucket, key);
         }
     }
 
@@ -80,7 +82,11 @@ public class StorageService {
         }
     }
 
-    public void uploadObjects(String bucket, String name) {
-
+    public void uploadObjects(String bucket, String name, File[] files) {
+        String key = "pickup/" + name + "/";
+        for (File s : files) {
+            File fileToUpload = new File(s.getAbsolutePath());
+            s3.putObject(bucket, key + fileToUpload.getName(), fileToUpload);
+        }
     }
 }
