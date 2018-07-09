@@ -12,5 +12,7 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.362'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

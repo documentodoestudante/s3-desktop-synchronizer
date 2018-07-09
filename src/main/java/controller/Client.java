@@ -7,6 +7,16 @@ public class Client {
     private String accessKey;
     private String secretKey;
     private String region;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
     private String bucket;
 
     public String getAccessKey() {
