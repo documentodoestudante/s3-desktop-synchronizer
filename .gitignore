@@ -8,3 +8,6 @@ src/main/java/META-INF/*
 /.project
 /.settings/
 /bin/
+.metadata/*
+classes/*
+

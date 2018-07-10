@@ -52,9 +52,16 @@ public class StorageService {
             System.out.println(listing.getKey());
             objects.add(listing.getKey());
         }
+        while (listObjects.isTruncated()) {
+            listObjects = s3.listNextBatchOfObjects(listObjects);
+            for (S3ObjectSummary listing : listObjects.getObjectSummaries()) {
+                System.out.println(listing.getKey());
+                objects.add(listing.getKey());
+            }
+        }
         for (String key : objects) {
             if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg"))
-                downloadToLocal(BASE_PATH+FILE_SEPARATOR+key, bucket, key);
+                downloadToLocal(BASE_PATH + FILE_SEPARATOR + key, bucket, key);
         }
     }
 
