@@ -2,6 +2,7 @@ package controller;
 
 import service.StorageService;
 
+import javax.swing.*;
 import java.io.File;
 
 import static view.Principal.BASE_PATH;
@@ -19,5 +20,7 @@ public class SyncController {
         pickupDirectory.mkdirs();
         File[] files = pickupDirectory.listFiles();
         storageService.uploadObjects(client.getBucket(), client.getName(), files);
+        JOptionPane.showMessageDialog(null, "Fim sincronização", "Sincronização", JOptionPane.INFORMATION_MESSAGE);
+
     }
 }

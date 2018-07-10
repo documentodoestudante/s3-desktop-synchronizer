@@ -6,10 +6,16 @@ import controller.SyncController;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import static view.GlobalConstants.*;
 import static view.Principal.BASE_PATH;
+import static view.Principal.FILE_SEPARATOR;
 
 public class TelaPrincipalView extends JFrame {
 
@@ -18,10 +24,10 @@ public class TelaPrincipalView extends JFrame {
     private JButton btnSynconize, btnDirectory;
     private JLabel lblAccessKey, lblSecretKey, lblBucket, lblRegion, lblConvenio, lblTitulo;
 
-    public TelaPrincipalView() {
+    public TelaPrincipalView() throws IOException {
 
         setTitle(TITULO);
-        setSize(800, 600);
+        setSize(490, 500);
         setLayout(null);
         jFrame = this;
 
@@ -45,6 +51,7 @@ public class TelaPrincipalView extends JFrame {
         btnSynconize.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Iniciando sincronização", "Sincronização", JOptionPane.INFORMATION_MESSAGE);
                 Client client = new Client();
                 client.setAccessKey(txtAccessKey.getText());
                 client.setSecretKey(txtSecretKey.getText());
@@ -80,28 +87,29 @@ public class TelaPrincipalView extends JFrame {
             }
         });
 
-        addComponent(lblTitulo, 200, 40, 400 - 100, 10);
+        addComponent(lblTitulo, 350, 80, (this.getWidth() / 2) - (200 / 2), 10);
 
-        addComponent(lblAccessKey, 200, 40, 10, 110);
-        addComponent(txtAccessKey, 200, 40, 120, 110);
+        addComponent(lblAccessKey, 350, 40, 10, 110);
+        addComponent(txtAccessKey, 350, 40, 120, 110);
 
-        addComponent(lblSecretKey, 200, 40, 10, 160);
-        addComponent(txtSecretKey, 200, 40, 120, 160);
+        addComponent(lblSecretKey, 350, 40, 10, 160);
+        addComponent(txtSecretKey, 350, 40, 120, 160);
 
-        addComponent(lblRegion, 200, 40, 10, 220);
-        addComponent(txtRegion, 200, 40, 120, 220);
+        addComponent(lblRegion, 350, 40, 10, 220);
+        addComponent(txtRegion, 350, 40, 120, 220);
 
-        addComponent(lblBucket, 200, 40, 10, 280);
-        addComponent(txtBucket, 200, 40, 120, 280);
+        addComponent(lblBucket, 350, 40, 10, 280);
+        addComponent(txtBucket, 350, 40, 120, 280);
 
-        addComponent(lblConvenio, 200, 40, 10, 340);
-        addComponent(txtConvenio, 200, 40, 120, 340);
+        addComponent(lblConvenio, 350, 40, 10, 340);
+        addComponent(txtConvenio, 350, 40, 120, 340);
 
-        addComponent(btnSynconize, 200, 40, 10, 500);
+        addComponent(btnSynconize, 460, 40, 10, 390);
 
         if (BASE_PATH.isEmpty())
             procuraArquivo();
 
+//        getGif();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -112,7 +120,6 @@ public class TelaPrincipalView extends JFrame {
     }
 
     public void procuraArquivo() {
-//        FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt e .zip", ".zip", ".txt");
         String pathBase = System.getProperty("user.home");
         File file = new File(pathBase);
 
@@ -120,13 +127,31 @@ public class TelaPrincipalView extends JFrame {
         jFileChooser.setCurrentDirectory(file);
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jFileChooser.setAcceptAllFileFilterUsed(true);
-//        jFileChooser.setFileFilter(filter);
         String caminhoArquivo = "";
         int retorno = jFileChooser.showOpenDialog(null);
-        caminhoArquivo = jFileChooser.getSelectedFile().getAbsolutePath();
+        if (retorno == JFileChooser.DIRECTORIES_ONLY) {
+            if (jFileChooser.getSelectedFile() == null)
+                caminhoArquivo = System.getProperty("user.home") + FILE_SEPARATOR + "SINCRONIZACAO";
+            else
+                caminhoArquivo = jFileChooser.getSelectedFile().getAbsolutePath();
+
+        }
         System.out.println(caminhoArquivo);
         BASE_PATH = caminhoArquivo;
     }
 
+    public void getGif() throws IOException {
+        byte[] b = new byte[1];
+        URL url = new URL("https://thumbs.gfycat.com/SkinnySeveralAsianlion-size_restricted.gif");
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.connect();
+        DataInputStream di = new DataInputStream(urlConnection.getInputStream());
+
+        FileOutputStream fo = new FileOutputStream("a.gif");
+        while (-1 != di.read(b, 0, 1))
+            fo.write(b, 0, 1);
+        di.close();
+        fo.close();
+    }
 
 }
