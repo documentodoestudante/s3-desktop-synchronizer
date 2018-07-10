@@ -54,7 +54,7 @@ public class StorageService {
         }
         for (String key : objects) {
             if (key.contains(".zip") || key.contains(".txt"))
-                downloadToLocal(BASE_PATH + FILE_SEPARATOR + key, bucket, key);
+                downloadToLocal(BASE_PATH+FILE_SEPARATOR+key, bucket, key);
         }
     }
 
@@ -63,8 +63,11 @@ public class StorageService {
         try {
             S3Object o = s3.getObject(bucket_name, key_name);
             S3ObjectInputStream s3is = o.getObjectContent();
+            System.out.println(path);
+            if (!new File(path).exists())
+                new File(path).getParentFile().mkdirs();
+
             File arquivo = new File(path);
-            arquivo.getParentFile().mkdirs();
             System.out.println("ARQUIVO " + arquivo.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(arquivo);
             byte[] read_buf = new byte[1024];

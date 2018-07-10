@@ -129,13 +129,12 @@ public class TelaPrincipalView extends JFrame {
         jFileChooser.setAcceptAllFileFilterUsed(true);
         String caminhoArquivo = "";
         int retorno = jFileChooser.showOpenDialog(null);
-        if (retorno == JFileChooser.DIRECTORIES_ONLY) {
+//        if (retorno == JFileChooser.DIRECTORIES_ONLY) {
             if (jFileChooser.getSelectedFile() == null)
                 caminhoArquivo = System.getProperty("user.home") + FILE_SEPARATOR + "SINCRONIZACAO";
             else
                 caminhoArquivo = jFileChooser.getSelectedFile().getAbsolutePath();
-
-        }
+//        }
         System.out.println(caminhoArquivo);
         BASE_PATH = caminhoArquivo;
     }

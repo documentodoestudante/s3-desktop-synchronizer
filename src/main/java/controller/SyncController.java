@@ -12,10 +12,11 @@ public class SyncController {
 
     public SyncController(Client client) {
 
+        System.out.println("INICIANDO DOWNLOAD....");
         StorageService storageService = new StorageService(client);
-//        storageService.listObjects(client.getBucket());
         storageService.downloadObjects(client.getBucket(), client.getName());
 
+        System.out.println("INICIANDO UPLOAD....");
         File pickupDirectory = new File(BASE_PATH + "/pickup/" + client.getName());
         pickupDirectory.mkdirs();
         File[] files = pickupDirectory.listFiles();
