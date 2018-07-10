@@ -1,27 +1,29 @@
 package controller;
 
-import service.StorageService;
-
-import javax.swing.*;
 import java.io.File;
 
-import static view.Principal.BASE_PATH;
+import service.StorageService;
+import view.Tela;
 
-public class SyncController {
+public class SyncController implements Runnable {
+	private Client client;
+	private Tela jframe;
 
+	public SyncController(Client client, Tela jrame) {
+		this.client = client;
+		this.jframe = jrame;
+	}
 
-    public SyncController(Client client) {
-
-        System.out.println("INICIANDO DOWNLOAD....");
-        StorageService storageService = new StorageService(client);
-        storageService.downloadObjects(client.getBucket(), client.getName());
-
-        System.out.println("INICIANDO UPLOAD....");
-        File pickupDirectory = new File(BASE_PATH + "/pickup/" + client.getName());
-        pickupDirectory.mkdirs();
-        File[] files = pickupDirectory.listFiles();
-        storageService.uploadObjects(client.getBucket(), client.getName(), files);
-        JOptionPane.showMessageDialog(null, "Fim sincronização", "Sincronização", JOptionPane.INFORMATION_MESSAGE);
-
-    }
+	@Override
+	public void run() {
+		System.out.println("inicio");
+		StorageService storageService = new StorageService(client);
+		storageService.downloadObjects(client);
+		File pickupDirectory = new File(client.getPath() + "/pickup/" + client.getName());
+		pickupDirectory.mkdirs();
+		File[] files = pickupDirectory.listFiles();
+		storageService.uploadObjects(client.getBucket(), client.getName(), files);
+		this.jframe.validaFim(true);
+		System.out.println("Fim");
+	}
 }

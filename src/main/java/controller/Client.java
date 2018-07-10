@@ -10,6 +10,8 @@ public class Client implements Serializable {
 	private String region;
 	private String name;
 	private String bucket;
+	private String path;
+	private boolean loaded;
 
 	public String getName() {
 		return name;
@@ -49,5 +51,21 @@ public class Client implements Serializable {
 
 	public void setBucket(String bucket) {
 		this.bucket = bucket;
+	}
+
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
