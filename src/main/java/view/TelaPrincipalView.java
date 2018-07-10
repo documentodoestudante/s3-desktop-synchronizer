@@ -31,15 +31,14 @@ public class TelaPrincipalView extends JFrame {
         setLayout(null);
         jFrame = this;
 
-        txtAccessKey = new JTextField("AKIAJZRBINGUTPZIYAPA");
-        txtSecretKey = new JTextField("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");
+        txtAccessKey = new JTextField("");
+        txtSecretKey = new JTextField("");
         txtRegion = new JTextField("sa-east-1");
         txtRegion.setEnabled(false);
         txtBucket = new JTextField("convenios");
         txtConvenio = new JTextField("PESSOAL");
 
         btnSynconize = new JButton(SYNC);
-        btnDirectory = new JButton("Diretório");
 
         lblAccessKey = new JLabel(ACCESS_KEY);
         lblSecretKey = new JLabel(SECRET_KEY);
