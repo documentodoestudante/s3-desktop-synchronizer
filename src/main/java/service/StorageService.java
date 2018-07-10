@@ -53,7 +53,7 @@ public class StorageService {
             objects.add(listing.getKey());
         }
         for (String key : objects) {
-            if (key.contains(".zip") || key.contains(".txt"))
+            if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg"))
                 downloadToLocal(BASE_PATH+FILE_SEPARATOR+key, bucket, key);
         }
     }
