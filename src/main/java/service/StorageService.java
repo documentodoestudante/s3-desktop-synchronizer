@@ -34,7 +34,8 @@ public class StorageService {
     private AmazonS3 getClient() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(client.getAccessKey(), client.getSecretKey());
         AWSStaticCredentialsProvider staticCredentialsProvider = new AWSStaticCredentialsProvider(basicAWSCredentials);
-        return AmazonS3ClientBuilder.standard().withRegion(Regions.SA_EAST_1).withCredentials(staticCredentialsProvider).build();
+        AmazonS3 build = AmazonS3ClientBuilder.standard().withRegion(Regions.SA_EAST_1).withCredentials(staticCredentialsProvider).build();
+        return build;
     }
 
     public void listObjects(String bucketName) {
