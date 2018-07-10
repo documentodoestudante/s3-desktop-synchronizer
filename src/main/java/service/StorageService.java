@@ -47,7 +47,7 @@ public class StorageService {
 
     public void downloadObjects(String bucket, String nome) {
         ObjectListing listObjects = s3.listObjects(bucket, "processed/" + nome + "/");
-        List<String> objects = new ArrayList<>();
+        List<String> objects = new ArrayList<String>();
         for (S3ObjectSummary listing : listObjects.getObjectSummaries()) {
             System.out.println(listing.getKey());
             objects.add(listing.getKey());

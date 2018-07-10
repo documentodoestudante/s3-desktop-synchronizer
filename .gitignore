@@ -4,5 +4,10 @@ gradle/*
 out/*
 s3-desktop-synchronizer.iml
 src/main/java/META-INF/*
+/.gradle/
+/.project
+/.settings/
+/bin/
 .metadata/*
 classes/*
+
