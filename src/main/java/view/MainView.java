@@ -17,6 +17,10 @@ import static config.GlobalConstants.*;
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    public static JProgressBar LBL_LOADING = new JProgressBar();
+    private final JPanel panelForm = new JPanel();
+    private final JPanel panelInicio = new JPanel();
+    private final JPanel panelLoader = new JPanel();
     private JPanel contentPane;
     private JTextField txtAccessKey;
     private JTextField txtSecretKey;
@@ -27,7 +31,7 @@ public class MainView extends JFrame {
     private Client cli;
     private MainView frame;
 
-    public MainView(Client client) throws MalformedURLException {
+    public MainView(final Client client) throws MalformedURLException {
         frame = this;
         setResizable(false);
         cli = client;
@@ -39,7 +43,6 @@ public class MainView extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        final JPanel panelForm = new JPanel();
         panelForm.setBounds(0, 0, this.getWidth(), this.getHeight());
         contentPane.add(panelForm);
         panelForm.setLayout(null);
@@ -125,7 +128,6 @@ public class MainView extends JFrame {
         lblErro.setVisible(false);
         panelForm.add(lblErro);
 
-        final JPanel panelInicio = new JPanel();
         panelInicio.setBounds(0, 0, this.getWidth(), this.getHeight());
         contentPane.add(panelInicio);
         panelInicio.setLayout(null);
@@ -143,12 +145,16 @@ public class MainView extends JFrame {
         else
             btnSincronizar.setEnabled(false);
 
-        final JPanel panelLoader = new JPanel();
         panelLoader.setBounds(0, 0, this.getWidth(), this.getHeight());
+        System.out.println(panelLoader.getLayout());
+        panelLoader.setLayout(null);
         contentPane.add(panelLoader);
         URL url = new URL(LOADING_GIF_URL);
         ImageIcon icon = new ImageIcon(url);
+        LBL_LOADING.setBounds(0, this.getWidth() - 50, this.getWidth(), 60);
+        panelLoader.add(LBL_LOADING);
         JLabel lblLoader = new JLabel(icon);
+        lblLoader.setBounds(0, 0, getWidth(), getHeight() - 50);
         panelLoader.add(lblLoader);
         panelLoader.setVisible(false);
 
@@ -177,6 +183,7 @@ public class MainView extends JFrame {
                 aux.setBucket(txtBucket.getText());
                 aux.setName(txtConvenio.getText());
                 aux.setPath(txtFolder.getText());
+                aux.setDataAtualizacao(cli.getDataAtualizacao());
                 try {
                     salvo = ClientHelper.salvaClient(aux);
                 } catch (IOException e1) {
@@ -214,11 +221,13 @@ public class MainView extends JFrame {
 
     public void validaFim(boolean res) {
         if (res) {
-            frame.dispose();
+            panelInicio.setVisible(true);
+            panelLoader.setVisible(false);
             JOptionPane.showMessageDialog(null, SYNC_END, RESULT, JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
         } else {
             JOptionPane.showMessageDialog(frame, SYNC_ERROR, RESULT, JOptionPane.ERROR_MESSAGE);
+            panelInicio.setVisible(true);
+            panelLoader.setVisible(false);
         }
     }
 }

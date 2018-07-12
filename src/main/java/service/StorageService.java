@@ -12,12 +12,15 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import controller.Client;
 import org.joda.time.LocalDate;
+import view.ClientHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static view.MainView.LBL_LOADING;
 
 public class StorageService {
 
@@ -44,26 +47,12 @@ public class StorageService {
         }
     }
 
-    private void addKeyToList(List<String> keysToDownload, ObjectListing listObjects) {
+    private void addKeyToList(List<String> keysToDownload, ObjectListing listObjects, Client client) {
+        int data = client.getDataAtualizacao().getDayOfYear();
         for (S3ObjectSummary listing : listObjects.getObjectSummaries()) {
             LocalDate dataFile = new LocalDate(listing.getLastModified());
-            LocalDate dataAtual = new LocalDate();
-            if (dataAtual.getDayOfYear() - dataFile.getDayOfYear() <= 3)
+            if (dataFile.getDayOfYear() >= data)
                 keysToDownload.add(listing.getKey());
-        }
-    }
-
-    public void downloadObjects(Client cli) {
-        ObjectListing listObjects = s3.listObjects(cli.getBucket(), "processed/" + cli.getName() + "/");
-        List<String> keysToDownload = new ArrayList<String>();
-        addKeyToList(keysToDownload, listObjects);
-        while (listObjects.isTruncated()) {
-            listObjects = s3.listNextBatchOfObjects(listObjects);
-            addKeyToList(keysToDownload, listObjects);
-        }
-        for (String key : keysToDownload) {
-            if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg"))
-                downloadToLocal(cli.getPath() + System.getProperty("file.separator") + key, cli.getBucket(), key);
         }
     }
 
@@ -93,9 +82,55 @@ public class StorageService {
         }
     }
 
+    public void downloadObjects(final Client cli) {
+        LBL_LOADING.setValue(0);
+
+        ObjectListing listObjects = s3.listObjects(cli.getBucket(), "processed/" + cli.getName() + "/");
+        final List<String> keysToDownload = new ArrayList<String>();
+        addKeyToList(keysToDownload, listObjects, cli);
+        while (listObjects.isTruncated()) {
+            listObjects = s3.listNextBatchOfObjects(listObjects);
+            addKeyToList(keysToDownload, listObjects, cli);
+        }
+
+        LBL_LOADING.setMaximum(keysToDownload.size());
+        LBL_LOADING.setStringPainted(true);
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 0;
+                for (String key : keysToDownload) {
+                    LBL_LOADING.setValue(i);
+                    i++;
+                    if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg")) {
+                        downloadToLocal(cli.getPath() + System.getProperty("file.separator") + key, cli.getBucket(), key);
+                    }
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            cli.setDataAtualizacao(new LocalDate());
+            ClientHelper.salvaClient(cli);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void uploadObjects(String bucket, String name, File[] files) {
+//        LBL_LOADING.setValue(0);
         String key = "pickup/" + name + "/";
+        int i = 1;
         for (File s : files) {
+//            LBL_LOADING.setValue((files.length/100)*i);
             File fileToUpload = new File(s.getAbsolutePath());
             s3.putObject(bucket, key + fileToUpload.getName(), fileToUpload);
         }
