@@ -146,7 +146,6 @@ public class MainView extends JFrame {
             btnSincronizar.setEnabled(false);
 
         panelLoader.setBounds(0, 0, this.getWidth(), this.getHeight());
-        System.out.println(panelLoader.getLayout());
         panelLoader.setLayout(null);
         contentPane.add(panelLoader);
         URL url = new URL(LOADING_GIF_URL);

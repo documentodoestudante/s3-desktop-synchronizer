@@ -35,9 +35,8 @@ public class StorageService {
     private AmazonS3 getClient() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(client.getAccessKey(), client.getSecretKey());
         AWSStaticCredentialsProvider staticCredentialsProvider = new AWSStaticCredentialsProvider(basicAWSCredentials);
-        AmazonS3 build = AmazonS3ClientBuilder.standard().withRegion(Regions.SA_EAST_1)
+        return AmazonS3ClientBuilder.standard().withRegion(Regions.SA_EAST_1)
                 .withCredentials(staticCredentialsProvider).build();
-        return build;
     }
 
     public void listObjects(String bucketName) {
@@ -67,7 +66,7 @@ public class StorageService {
             File arquivo = new File(path);
             FileOutputStream fos = new FileOutputStream(arquivo);
             byte[] read_buf = new byte[1024];
-            int read_len = 0;
+            int read_len;
             while ((read_len = s3is.read(read_buf)) > 0) {
                 fos.write(read_buf, 0, read_len);
             }
@@ -75,10 +74,8 @@ public class StorageService {
             fos.close();
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
-            System.exit(1);
         } catch (IOException e) {
             System.err.println(e.getMessage());
-            System.exit(1);
         }
     }
 
@@ -104,7 +101,7 @@ public class StorageService {
                 for (String key : keysToDownload) {
                     LBL_LOADING.setValue(i);
                     i++;
-                    if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg")) {
+                    if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg") || key.contains(".png")) {
                         downloadToLocal(cli.getPath() + System.getProperty("file.separator") + key, cli.getBucket(), key);
                     }
                 }
@@ -125,14 +122,30 @@ public class StorageService {
 
     }
 
-    public void uploadObjects(String bucket, String name, File[] files) {
-//        LBL_LOADING.setValue(0);
-        String key = "pickup/" + name + "/";
-        int i = 1;
-        for (File s : files) {
-//            LBL_LOADING.setValue((files.length/100)*i);
-            File fileToUpload = new File(s.getAbsolutePath());
-            s3.putObject(bucket, key + fileToUpload.getName(), fileToUpload);
+    public void uploadObjects(final String bucket, String name, final File[] files) {
+        LBL_LOADING.setValue(0);
+        LBL_LOADING.setMaximum(files.length);
+        final String key = "pickup/" + name + "/";
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 1;
+                for (File s : files) {
+                    LBL_LOADING.setValue(i);
+                    i++;
+                    File fileToUpload = new File(s.getAbsolutePath());
+                    s3.putObject(bucket, key + fileToUpload.getName(), fileToUpload);
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+
     }
 }
