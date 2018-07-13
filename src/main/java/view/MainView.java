@@ -151,7 +151,7 @@ public class MainView extends JFrame {
         contentPane.add(panelLoader);
         URL url = new URL(LOADING_GIF_URL);
         ImageIcon icon = new ImageIcon(url);
-        LBL_LOADING.setBounds(0, this.getWidth() - 50, this.getWidth(), 60);
+        LBL_LOADING.setBounds(0, this.getWidth() - 50, this.getWidth(), 40);
         panelLoader.add(LBL_LOADING);
         JLabel lblLoader = new JLabel(icon);
         lblLoader.setBounds(0, 0, getWidth(), getHeight() - 50);
