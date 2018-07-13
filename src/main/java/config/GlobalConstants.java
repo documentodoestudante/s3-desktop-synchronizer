@@ -19,5 +19,7 @@ public class GlobalConstants {
     public static String SYNC_END = "Fim da Sincronizacao";
     public static String SYNC_ERROR = "Erro na Sincronizacao";
 
+    public static String PROPERTY_BUCKET = "dne-convenios";
+    public static String PROPERTY_REGION = "sa-east-1";
 
 }

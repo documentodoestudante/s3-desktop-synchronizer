@@ -86,15 +86,17 @@ public class MainView extends JFrame {
 
         txtRegiao = new JTextField();
         txtRegiao.setBounds(167, 109, 193, 28);
+        txtRegiao.setEnabled(false);
         panelForm.add(txtRegiao);
         txtRegiao.setColumns(10);
-        txtRegiao.setText(cli.getRegion());
+        txtRegiao.setText(cli.getRegion() == null? PROPERTY_REGION: cli.getBucket());
 
         txtBucket = new JTextField();
         txtBucket.setBounds(167, 157, 193, 28);
+        txtBucket.setEnabled(false);
         panelForm.add(txtBucket);
         txtBucket.setColumns(10);
-        txtBucket.setText(cli.getBucket());
+        txtBucket.setText(cli.getBucket() == null? PROPERTY_BUCKET: cli.getBucket());
 
         txtConvenio = new JTextField();
         txtConvenio.setBounds(167, 205, 193, 28);

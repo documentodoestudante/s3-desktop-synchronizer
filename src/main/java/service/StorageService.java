@@ -146,6 +146,6 @@ public class StorageService {
             e.printStackTrace();
         }
 
-
+        LBL_LOADING.setValue(0);
     }
 }
