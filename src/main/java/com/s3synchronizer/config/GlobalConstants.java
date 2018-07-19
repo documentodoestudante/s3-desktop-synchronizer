@@ -1,4 +1,4 @@
-package config;
+package com.s3synchronizer.config;
 
 public class GlobalConstants {
 

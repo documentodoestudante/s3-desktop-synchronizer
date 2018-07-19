@@ -1,6 +1,6 @@
-package view;
+package com.s3synchronizer.view;
 
-import controller.Client;
+import com.s3synchronizer.controller.Client;
 
 import java.awt.*;
 
