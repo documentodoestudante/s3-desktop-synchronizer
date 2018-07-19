@@ -1,4 +1,4 @@
-package controller;
+package com.s3synchronizer.controller;
 
 import org.joda.time.LocalDate;
 

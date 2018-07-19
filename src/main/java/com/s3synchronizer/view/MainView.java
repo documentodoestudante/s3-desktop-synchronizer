@@ -1,7 +1,7 @@
-package view;
+package com.s3synchronizer.view;
 
-import controller.Client;
-import controller.SyncController;
+import com.s3synchronizer.controller.Client;
+import com.s3synchronizer.controller.SyncController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static config.GlobalConstants.*;
+import static com.s3synchronizer.config.GlobalConstants.*;
 
 public class MainView extends JFrame {
 

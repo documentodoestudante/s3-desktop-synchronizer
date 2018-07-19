@@ -1,8 +1,8 @@
-package controller;
+package com.s3synchronizer.controller;
 
-import service.StorageService;
-import view.ClientHelper;
-import view.MainView;
+import com.s3synchronizer.service.StorageService;
+import com.s3synchronizer.view.ClientHelper;
+import com.s3synchronizer.view.MainView;
 
 import java.io.File;
 import java.io.FileFilter;

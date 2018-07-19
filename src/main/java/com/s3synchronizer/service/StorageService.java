@@ -1,4 +1,4 @@
-package service;
+package com.s3synchronizer.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -10,9 +10,9 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import controller.Client;
+import com.s3synchronizer.controller.Client;
 import org.joda.time.LocalDate;
-import view.ClientHelper;
+import com.s3synchronizer.view.ClientHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static view.MainView.LBL_LOADING;
+import static com.s3synchronizer.view.MainView.LBL_LOADING;
 
 public class StorageService {
 
