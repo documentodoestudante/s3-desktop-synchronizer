@@ -19,8 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static view.MainView.LBL_LOADING;
+
 
 public class StorageService {
 
@@ -47,7 +47,7 @@ public class StorageService {
     }
 
     private void addKeyToList(List<String> keysToDownload, ObjectListing listObjects, Client client) {
-        int data = client.getDataAtualizacao().getDayOfYear();
+        int data = client.getUpdateDate().getDayOfYear();
         for (S3ObjectSummary listing : listObjects.getObjectSummaries()) {
             LocalDate dataFile = new LocalDate(listing.getLastModified());
             if (dataFile.getDayOfYear() >= data)
@@ -69,6 +69,7 @@ public class StorageService {
             int read_len;
             while ((read_len = s3is.read(read_buf)) > 0) {
                 fos.write(read_buf, 0, read_len);
+
             }
             s3is.close();
             fos.close();
@@ -88,6 +89,7 @@ public class StorageService {
         while (listObjects.isTruncated()) {
             listObjects = s3.listNextBatchOfObjects(listObjects);
             addKeyToList(keysToDownload, listObjects, cli);
+            System.out.println("Baixando");
         }
 
         LBL_LOADING.setMaximum(keysToDownload.size());
@@ -114,8 +116,8 @@ public class StorageService {
             e.printStackTrace();
         }
         try {
-            cli.setDataAtualizacao(new LocalDate());
-            ClientHelper.salvaClient(cli);
+            cli.setUpdateDate(new LocalDate());
+            ClientHelper.saveClient(cli);
         } catch (IOException e) {
             e.printStackTrace();
         }
