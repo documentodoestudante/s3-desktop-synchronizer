@@ -1,8 +1,6 @@
 package controller;
 
 
-import view.MainView;
-
 
 public class TerminalController {
 
