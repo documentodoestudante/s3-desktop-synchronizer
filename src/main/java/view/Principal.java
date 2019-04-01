@@ -12,15 +12,11 @@ public class Principal {
             client = new Client();
             MainView mainView = new MainView(client);
 
-
             mainView.setVisible(true);
             return;
         }
-
         TerminalController terminalController = new TerminalController();
         terminalController.sync(client);
-
-
     }
 
 }

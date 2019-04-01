@@ -16,5 +16,6 @@ public class GlobalConstants {
     public static String SYNC_INIT = "inicio";
     public static String PROPERTY_BUCKET = "dne-convenios";
     public static String PROPERTY_REGION = "sa-east-1";
+    public static String DOWNLOADING = "Baixando";
 
 }

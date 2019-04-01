@@ -15,7 +15,6 @@ import static config.GlobalConstants.*;
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    public static JProgressBar LBL_LOADING = new JProgressBar();
     private final JPanel panelForm = new JPanel();
     private JPanel contentPane;
     private JTextField txtAccessKey = new JTextField();
