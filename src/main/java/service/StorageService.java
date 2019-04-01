@@ -19,8 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static view.MainView.LBL_LOADING;
+import static config.GlobalConstants.*;
 
 public class StorageService {
 
@@ -47,7 +46,7 @@ public class StorageService {
     }
 
     private void addKeyToList(List<String> keysToDownload, ObjectListing listObjects, Client client) {
-        int data = client.getDataAtualizacao().getDayOfYear();
+        int data = client.getUpdateDate().getDayOfYear();
         for (S3ObjectSummary listing : listObjects.getObjectSummaries()) {
             LocalDate dataFile = new LocalDate(listing.getLastModified());
             if (dataFile.getDayOfYear() >= data)
@@ -69,6 +68,7 @@ public class StorageService {
             int read_len;
             while ((read_len = s3is.read(read_buf)) > 0) {
                 fos.write(read_buf, 0, read_len);
+
             }
             s3is.close();
             fos.close();
@@ -80,7 +80,6 @@ public class StorageService {
     }
 
     public void downloadObjects(final Client cli) {
-        LBL_LOADING.setValue(0);
 
         ObjectListing listObjects = s3.listObjects(cli.getBucket(), "processed/" + cli.getName() + "/");
         final List<String> keysToDownload = new ArrayList<String>();
@@ -88,10 +87,8 @@ public class StorageService {
         while (listObjects.isTruncated()) {
             listObjects = s3.listNextBatchOfObjects(listObjects);
             addKeyToList(keysToDownload, listObjects, cli);
+            System.out.println(DOWNLOADING);
         }
-
-        LBL_LOADING.setMaximum(keysToDownload.size());
-        LBL_LOADING.setStringPainted(true);
 
 
         Thread thread = new Thread(new Runnable() {
@@ -99,7 +96,6 @@ public class StorageService {
             public void run() {
                 int i = 0;
                 for (String key : keysToDownload) {
-                    LBL_LOADING.setValue(i);
                     i++;
                     if (key.contains(".jpg") || key.contains(".txt") || key.contains(".jpeg") || key.contains(".png")) {
                         downloadToLocal(cli.getPath() + System.getProperty("file.separator") + key, cli.getBucket(), key);
@@ -114,8 +110,8 @@ public class StorageService {
             e.printStackTrace();
         }
         try {
-            cli.setDataAtualizacao(new LocalDate());
-            ClientHelper.salvaClient(cli);
+            cli.setUpdateDate(new LocalDate());
+            ClientHelper.saveClient(cli);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,8 +119,6 @@ public class StorageService {
     }
 
     public void uploadObjects(final String bucket, String name, final File[] files) {
-        LBL_LOADING.setValue(0);
-        LBL_LOADING.setMaximum(files.length);
         final String key = "pickup/" + name + "/";
 
         Thread thread = new Thread(new Runnable() {
@@ -132,7 +126,6 @@ public class StorageService {
             public void run() {
                 int i = 1;
                 for (File s : files) {
-                    LBL_LOADING.setValue(i);
                     i++;
                     File fileToUpload = new File(s.getAbsolutePath());
                     s3.putObject(bucket, key + fileToUpload.getName(), fileToUpload);
@@ -145,7 +138,5 @@ public class StorageService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        LBL_LOADING.setValue(0);
     }
 }

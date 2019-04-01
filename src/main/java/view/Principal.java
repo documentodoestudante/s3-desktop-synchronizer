@@ -1,32 +1,22 @@
 package view;
 
 import controller.Client;
-
-import java.awt.*;
+import controller.TerminalController;
 
 public class Principal {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    MainView frame = new MainView(getClient());
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+        Client client = ClientHelper.loadClient();
 
-    private static Client getClient() {
-        Client cli = null;
-        try {
-            cli = ClientHelper.carregaClient();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (client == null) {
+            client = new Client();
+            MainView mainView = new MainView(client);
+
+            mainView.setVisible(true);
+            return;
         }
-        return cli;
+        TerminalController terminalController = new TerminalController();
+        terminalController.sync(client);
     }
 
 }

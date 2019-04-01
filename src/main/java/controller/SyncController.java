@@ -2,32 +2,31 @@ package controller;
 
 import service.StorageService;
 import view.ClientHelper;
-import view.MainView;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
+import static config.GlobalConstants.*;
+
 public class SyncController implements Runnable {
     private Client client;
-    private MainView jframe;
     private StorageService storageService;
 
-    public SyncController(Client client, MainView jrame) {
+    public SyncController(Client client) {
         this.client = client;
-        this.jframe = jrame;
     }
 
     @Override
     public void run() {
-        System.out.println("inicio");
         try {
+            System.out.println(SYNC_INIT);
             download(client);
             upload();
-            this.jframe.validaFim(true);
-            System.out.println("Fim");
-        }catch (Exception e){
-            this.jframe.validaFim(false);
+            System.out.println(SYNC_END);
+        }
+        catch (Exception e){
+            System.err.println(SYNC_ERROR);
         }
     }
 
@@ -41,9 +40,9 @@ public class SyncController implements Runnable {
     private void download(Client cli){
         storageService = new StorageService(client);
         if (new File(cli.getPath() + System.getProperty("file.separator") + "processed/"+cli.getName()).list() == null){
-            cli.setDataAtualizacao(cli.getDataAtualizacao().minusDays(7));
+            cli.setUpdateDate(cli.getUpdateDate().minusDays(7));
             try {
-                ClientHelper.salvaClient(cli);
+                ClientHelper.saveClient(cli);
             } catch (IOException e) {
                 e.printStackTrace();
             }
