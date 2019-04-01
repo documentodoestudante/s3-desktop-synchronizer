@@ -13,16 +13,16 @@ public class Client implements Serializable {
     private String name;
     private String bucket;
     private String path;
-    private LocalDate updateDate;
-    public static boolean loaded;
+    private LocalDate dataAtualizacao;
+    private boolean loaded;
 
 
-    public LocalDate getUpdateDate() {
-        return updateDate;
+    public LocalDate getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
-        this.updateDate = updateDate;
+    public void setDataAtualizacao(LocalDate dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     public String getName() {
@@ -63,6 +63,10 @@ public class Client implements Serializable {
 
     public void setBucket(String bucket) {
         this.bucket = bucket;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
     }
 
     public void setLoaded(boolean loaded) {

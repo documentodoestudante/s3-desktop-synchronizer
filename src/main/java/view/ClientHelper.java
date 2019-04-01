@@ -6,9 +6,8 @@ import org.joda.time.LocalDate;
 import java.io.*;
 
 public class ClientHelper {
-
-    public static boolean saveClient(Client cli) throws IOException {
-        if (verifyClient(cli)) {
+    public static boolean salvaClient(Client cli) throws IOException {
+        if (verificaClient(cli)) {
             FileOutputStream f = new FileOutputStream(new File(System.getProperty("user.home") + "/client"));
             ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(cli);
@@ -20,7 +19,7 @@ public class ClientHelper {
         }
     }
 
-    public static Client loadClient() throws ClassNotFoundException {
+    public static Client carregaClient() throws ClassNotFoundException {
         Client cli;
         try {
             FileInputStream fi = new FileInputStream(new File(System.getProperty("user.home") + "/client"));
@@ -29,16 +28,17 @@ public class ClientHelper {
             oi.close();
             fi.close();
             cli.setLoaded(true);
-            if (cli.getUpdateDate() == null)
-                cli.setUpdateDate(LocalDate.now().minusDays(90));
-            return cli;
+            if (cli.getDataAtualizacao() == null)
+                cli.setDataAtualizacao(LocalDate.now().minusDays(90));
         } catch (IOException e) {
             System.err.println(e.getMessage());
-            return null;
+            cli = new Client();
+            cli.setDataAtualizacao(LocalDate.now().minusDays(7));
         }
+        return cli;
     }
 
-    private static boolean verifyClient(Client cli) {
+    private static boolean verificaClient(Client cli) {
         if (cli == null)
             return false;
         if (cli.getAccessKey() == null || cli.getAccessKey().trim().length() == 0)
@@ -55,5 +55,4 @@ public class ClientHelper {
             return false;
         return true;
     }
-
 }
